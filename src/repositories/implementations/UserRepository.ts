@@ -20,26 +20,16 @@ export class UserRepository implements IUserRepository {
             return await new ResponseImplementation(error.message, true)
         }
     }
-    async list(email){
-        if(email != null){
-            console.log("Caiu no caso do email")
-            try {
-                let res = await prisma.user.findUnique({where:{email:email}})
-                return await new ResponseImplementation(res, false)
-    
-            } catch (error) {
-                return await new ResponseImplementation(error.message, true)
-            }
-        }else{
-            try {
-                let result = await prisma.user.findMany()
-                let response =new ResponseImplementation(result, false)
-                return response
-    
-            } catch (error) {
-                return await new ResponseImplementation(error.message, true)
-            }
-        }    
+    async list(token){
+        try {
+            let decode = await jwt.decode(token, process.env.JWT_SECRET)
+            let userInfo = await prisma.user.findUnique({where:{email:decode.email}})
+
+            return new ResponseImplementation(userInfo, false)
+        } catch (error) {
+            return new ResponseImplementation(error.message, false)
+        }
+       
     }
     async delete(id){
         try {

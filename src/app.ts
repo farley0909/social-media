@@ -22,7 +22,7 @@ app.post("/api/user/upload/profile-picture/", upload.single('file') ,async (req:
         }, data:{
             foto_perfil:req.file.filename
         }}) 
-        res.render('home', {user:user})
+        res.redirect('/api/user/home/')
     } catch (error) {
         res.send(error.message)
     } 

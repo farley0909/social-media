@@ -82,6 +82,9 @@
     .footer {
       margin-top: 2%;
     }
+    #containerComentario {
+      margin-top: 2%;
+    }
     #card {
       width: 50%;
       margin-left: auto;
@@ -91,6 +94,29 @@
     </style>
 </head>
 <body> 
+  <%
+  let currentPost = 0
+  function getAutorNome(id){
+      for(let k=0; k<users.length;k++){
+        if(users[k].id == id){
+          return users[k].name
+        }
+      
+      }
+  }
+  function defineCurrentPost(id){
+    currentPost = id
+    return currentPost
+  }
+  function getIdAutor(id){
+      for(let k=0; k<users.length;k++){
+        if(users[k].id == id){
+          return users[k].id
+        }
+      
+      }
+  }
+%>
   <!-- Nav -->
     <nav class="navbar ">
         <div class="container-fluid">
@@ -123,7 +149,7 @@
           <div class="modal-content">
           <form action="http://localhost:8080/api/post/create/" method="post"  enctype="multipart/form-data">
             <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+              <h1 class="modal-title fs-5" id="exampleModalLabel"><Modal title></h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -168,6 +194,7 @@
           </form>
           </div>
         </div>
+        
       <!-- Modal Edit-->
       <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -195,17 +222,14 @@
       </div>
         <!-- Content -->
         <div class="container" id="contianerPosts">
+          <%let postAtual
+            function postDefinir(id){
+              postAtual = id
+            }
+          
+          %>
           <%posts.data.forEach(post => {%>
-            <%
-              function getAutorNome(id){
-                  for(let k=0; k<users.length;k++){
-                    if(users[k].id == id){
-                      return users[k].name
-                    }
-                  
-                  }
-              }
-            %>
+           
             <div class="card" id="card">
               <div class="card-header">
                
@@ -219,9 +243,9 @@
                       thumb_down
                       </span> -->
                   <span class="titlePost"><%= post.descricao %></span>
-                  <button id="btnEdit"data-bs-toggle="modal" data-bs-target="#modalEdit"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
+                  <button onclick="preencheFormComentarios('<%=post.id%>','<%=getIdAutor(post.autor)%>', '<%postDefinir(post.edit)%>')" id="btnForum" data-bs-toggle="modal" data-bs-target="#modalForum"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
                     forum
-                    </span></button>
+                  </span></button>
                   <button id="btnEdit"data-bs-toggle="modal" data-bs-target="#modalEdit"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
                     thumb_up
                     </span></button>
@@ -231,12 +255,43 @@
                 </div>
               </div>
               <div class="card-body">
-                <img src="http://localhost:8080/uploads/<%=post.imagem %>" class="card-img-top" alt="...">
+                <img onclick="paginaPerfil('<%=post.autor%>')" src="http://localhost:8080/uploads/<%=post.imagem %>" class="card-img-top" alt="...">
                   
                 </blockquote>
-                <footer class="footer"  >Posted by: <%=getAutorNome(post.autor)%>  </footer>
+                <footer class="footer">Posted by: <%=getAutorNome(post.autor)%>  </footer>
               </div>
             </div>   
+             <!-- Modal forum-->
+         <div class="modal fade" id="modalForum" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Forum</h1>
+                <button id="btnCloseForum2" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+              <form action="http://localhost:8080/api/post/create/" method="post">
+                <div class="container">
+                  <div class="list-group" id="container-comentario">
+                    
+                  </div>
+                </div>
+                <div class="container" id="containerComentario">
+                  <input id="iputComentario" class="form-control" type="text" name="comentario"  aria-label="default input example">
+                  <input type="text" hidden="true" id="comentarioIdUsuario" name="autor">
+                  <input type="text" hidden="true" id="comentarioIdFoto" name="foto">
+                </div>
+               
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-bs-dismiss="modal" id="btnCloseForum">Close</button>
+                <button type="button" class="btn btn-light" id="btnEnviarComentario">Send</button>
+              </div>
+            </form>
+            </div>
+          </form>
+          </div>
+        </div>
           <% }) %>   
           
         </div>

@@ -7,6 +7,7 @@ import {storage} from "./multerConfig"
 import { prisma } from './database';
 import { fileURLToPath } from 'url';
 import { addPhotoController } from './userCases/Photo/AddPhoto';
+import cors from 'cors'
 const upload = multer({storage:storage})
 const app =  express()
 app.use(morgan('tiny'))
@@ -15,6 +16,7 @@ app.use(express.json())
 app.set('view engine', 'ejs');
 app.set('views', './public');   
 app.use(router)
+app.use(cors())
 app.post("/api/user/upload/profile-picture/", upload.single('file') ,async (req:any, res)=>{
     try {
       let user = await prisma.user.update({ where:{

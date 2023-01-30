@@ -16,7 +16,16 @@ app.use(express.json())
 app.set('view engine', 'ejs');
 app.set('views', './public');   
 app.use(router)
-app.use(cors())
+app.use((req, res, next) => {
+	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
+    res.header("Access-Control-Allow-Origin", "*");
+	//Quais são os métodos que a conexão pode realizar na API
+    res.header("Access-Control-Allow-Methods", 'GET,PUT,POST,DELETE');
+    app.use(cors());
+    next();
+});
+
+
 app.post("/api/user/upload/profile-picture/", upload.single('file') ,async (req:any, res)=>{
     try {
       let user = await prisma.user.update({ where:{

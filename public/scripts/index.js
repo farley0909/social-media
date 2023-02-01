@@ -18,6 +18,7 @@ btnRegister.addEventListener('click', async ()=>{
             let request = await fetch('http://localhost:8080/api/user/register/', {
             method:'POST',
             body:JSON.stringify(dataToSend),
+            mode: 'no-cors'
             headers:{
                 'Content-Type':'application/json'
             }

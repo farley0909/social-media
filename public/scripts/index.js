@@ -44,7 +44,7 @@ btnSignIn.addEventListener('click',  async (ev)=>{
             password: senha
         }
         try {
-            let request = await fetch('http://localhost:8080/api/user/login/', {
+            let request = await fetch('/api/user/login/', {
             method:'POST',
             body:JSON.stringify(dataToSend),
             headers:{
@@ -58,7 +58,7 @@ btnSignIn.addEventListener('click',  async (ev)=>{
         }else{
             token = response.data
             localStorage.setItem('token', token);
-            window.location = 'http://localhost:8080/api/user/home/';
+            window.location = '/api/user/home/';
         }
        
         } catch (error) {

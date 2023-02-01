@@ -124,7 +124,7 @@
             <img src="./Resources/user.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-bottom" id="fotoPerfil">
             <% try{ %>
             <% if(user){ %>
-              <img src="http://localhost:8080/uploads/<%=user.foto_perfil%>" alt="Logo" width="50" height="50" class="d-inline-block align-text-bottom" id="fotoPerfil">
+              <img src="/uploads/<%=user.foto_perfil%>" alt="Logo" width="50" height="50" class="d-inline-block align-text-bottom" id="fotoPerfil">
               <%}%>
             <% } catch(err){} %>
       
@@ -147,7 +147,7 @@
       <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
           <div class="modal-content">
-          <form action="http://localhost:8080/api/post/create/" method="post"  enctype="multipart/form-data">
+          <form action="/api/post/create/" method="post"  enctype="multipart/form-data">
             <div class="modal-header">
               <h1 class="modal-title fs-5" id="exampleModalLabel"><Modal title></h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -179,7 +179,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-              <form id="formEnviarFotoPerfil" action="http://localhost:8080/api/user/upload/profile-picture/" method="post" enctype="multipart/form-data">
+              <form id="formEnviarFotoPerfil" action="/api/user/upload/profile-picture/" method="post" enctype="multipart/form-data">
                 <div class="input-group">
                   <input type="file" name="file" class="form-control" id="iputFIle" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                   <input type="text" name="id" id="idDoUsuario" hidden="true">
@@ -255,7 +255,7 @@
                 </div>
               </div>
               <div class="card-body">
-                <img onclick="paginaPerfil('<%=post.autor%>')" src="http://localhost:8080/uploads/<%=post.imagem %>" class="card-img-top" alt="...">
+                <img onclick="paginaPerfil('<%=post.autor%>')" src="/uploads/<%=post.imagem %>" class="card-img-top" alt="...">
                   
                 </blockquote>
                 <footer class="footer">Posted by: <%=getAutorNome(post.autor)%>  </footer>
@@ -270,7 +270,7 @@
                 <button id="btnCloseForum2" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-              <form action="http://localhost:8080/api/post/create/" method="post">
+              <form action="/api/post/create/" method="post">
                 <div class="container">
                   <div class="list-group" id="container-comentario">
                     

@@ -17,14 +17,14 @@ function showUserInfo(response){
     let foto = document.getElementById('fotoPerfil')
     let autorPost = document.getElementById('autorPost').value=""+ response.data.id
     if(response.data.foto_perfil.length > 0){
-        foto.setAttribute('src',"http://localhost:8080/uploads/"+response.data.foto_perfil)
+        foto.setAttribute('src',"/uploads/"+response.data.foto_perfil)
     }
     document.getElementById('comentarioIdUsuario').value = response.data.id
     
 }
 async function getUserInfo(){
     try {
-        let request = await fetch(`http://localhost:8080/api/user/list/${token}` )
+        let request = await fetch(`/api/user/list/${token}` )
         let response = await request.json()
         showUserInfo(response)
         return response
@@ -38,7 +38,7 @@ let postId
 async function preencheFormComentarios(id, user, ){
     postId = id   
     try {
-        let result = await fetch(`http://localhost:8080/api/comments/list/${postId}`)
+        let result = await fetch(`/api/comments/list/${postId}`)
         let res = await result.json()
         let container = document.getElementById('container-comentario')
         res.forEach(async el => {
@@ -72,7 +72,7 @@ btn.addEventListener('click', async ()=>{
          comentario: document.getElementById('iputComentario').value
      }
      console.log('dados a enviar: ', obj)
-     let req = await fetch('http://localhost:8080/api/post/create/v2/', {
+     let req = await fetch('/api/post/create/v2/', {
          method: 'post', 
              headers: {
                  'Content-Type':'application/json'
@@ -87,7 +87,7 @@ btn.addEventListener('click', async ()=>{
 })
 async function getuserNameById(id){
     
-    let names = await fetch('http://localhost:8080/api/user/names/')
+    let names = await fetch('/api/user/names/')
     let res = await names.json()
     let nome
     res.forEach(el => {
@@ -110,5 +110,5 @@ btnForumFechar2.addEventListener('click', ()=>{
 })
 
 async function paginaPerfil(id){
-   location.href='http://localhost:8080/api/user/profile/'+id
+   location.href='/api/user/profile/'+id
 }

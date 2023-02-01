@@ -15,7 +15,7 @@ btnRegister.addEventListener('click', async ()=>{
         }
         console.log("Dados a serem enviados", dataToSend)
         try {
-            let request = await fetch('https://social-media-production-c159.up.railway.app//api/user/register/', {
+            let request = await fetch('http://localhost:8080/api/user/register/', {
             method:'POST',
             body:JSON.stringify(dataToSend),
             headers:{

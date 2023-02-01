@@ -11,7 +11,7 @@ btnRegister.addEventListener('click', async ()=>{
         let dataToSend = {
             name : document.getElementById('inputNameRegister').value,
             email: document.getElementById('inputEmailResgister').value,
-            password:  document.getElementById('inputPasswordRegister').value,
+            password:  document.getElementById('inputPasswordRegister').value
         }
         console.log("Dados a serem enviados", dataToSend)
         try {

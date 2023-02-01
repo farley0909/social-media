@@ -7,7 +7,7 @@ import {storage} from "./multerConfig"
 import { prisma } from './database';
 import { fileURLToPath } from 'url';
 import { addPhotoController } from './userCases/Photo/AddPhoto';
-import {cors} from 'cors'
+import cors from 'cors'
 const upload = multer({storage:storage})
 const app =  express()
 app.use(morgan('tiny'))

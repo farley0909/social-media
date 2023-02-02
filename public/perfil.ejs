@@ -53,7 +53,7 @@
     <nav class="navbar bg-body-tertiary">
         <div class="container" id="fotoPerfil">
           <a class="navbar-brand" href="#">
-            <img id="imgPerfil" src="http://localhost:8080/uploads/<%=autor.foto_perfil%>" alt="Logo" width="150" height="140" class="d-inline-block align-text-top">
+            <img id="imgPerfil" src="/uploads/<%=autor.foto_perfil%>" alt="Logo" width="150" height="140" class="d-inline-block align-text-top">
           </a>
           <span id="nomeAutor"><%= autor.name%></span>
         </div>
@@ -87,7 +87,7 @@
               </div>
             </div>
             <div class="card-body">
-              <img src="http://localhost:8080/uploads/<%= post.imagem%>" class="card-img-top" alt="...">
+              <img src="/uploads/<%= post.imagem%>" class="card-img-top" alt="...">
                 
               </blockquote>
               <footer class="footer"> </footer>

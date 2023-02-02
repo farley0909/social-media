@@ -76,7 +76,7 @@ btn.addEventListener('click', async ()=>{
          method: 'post', 
              headers: {
                  'Content-Type':'application/json',
-                 'authorization':token
+             
              },
              body:JSON.stringify(obj)
          

@@ -75,7 +75,8 @@ btn.addEventListener('click', async ()=>{
      let req = await fetch('/api/post/create/v2/', {
          method: 'post', 
              headers: {
-                 'Content-Type':'application/json'
+                 'Content-Type':'application/json',
+                 'authorization':token
              },
              body:JSON.stringify(obj)
          

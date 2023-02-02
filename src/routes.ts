@@ -8,14 +8,14 @@ import { deleteUserController } from "./userCases/User/deleteUser";
 import { listUsersController } from "./userCases/User/ListUsers";
 import { loginUserControler } from "./userCases/User/LoginUser";
 import { ResponseImplementation } from "./util/ResponseImplementation";
-import cors from 'cors'
+
 let router = Router()
 
 router.get("/", async (req, res)=>{
   
     res.render("index")
 })
-router.post("/api/user/register/",cors(), async (request, response)=>{
+router.post("/api/user/register/", async (request, response)=>{
    await addUserController.handle(request, response)
 })
 router.get("/api/user/list/:token", async (req, res)=>{
@@ -56,7 +56,9 @@ router.get("/api/user/home/", async (req, res)=>{
     
 })
 router.post('/api/post/create/v2/', async (req, res)=>{
-    console.log(req.body)
+    if(req.headers.authorization.length <= 0){
+        return res.json(new ResponseImplementation('unauthorized', true))
+    }
     try {
         console.log('autor: ', req.body.autor)
         console.log('Post id: ', req.body.foto)

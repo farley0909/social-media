@@ -2,8 +2,10 @@
 let token 
 try {
    token = localStorage.getItem('token')
-   if(token === null) alert('Você precisa estar logado para acessar essa página')
-   location.href='/'
+   if(token === null){
+    alert('Você precisa estar logado para acessar essa página')
+    location.href='/'
+   }
 } catch (error) {
    alert('Você precisa estar logado') 
 }

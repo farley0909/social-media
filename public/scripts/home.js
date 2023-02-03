@@ -1,7 +1,12 @@
 
-let token = localStorage.getItem('token')
-console.log(token)
-
+let token 
+try {
+   token = localStorage.getItem('token')
+   if(token === null) alert('Você precisa estar logado para acessar essa página')
+   location.href='/'
+} catch (error) {
+   alert('Você precisa estar logado') 
+}
 let userId
 async function main(){
    let datauser =  await getUserInfo()
@@ -38,7 +43,7 @@ let postId
 async function preencheFormComentarios(id, user, ){
     postId = id   
     try {
-        let result = await fetch(`/api/comments/list/${postId}`)
+        let result = await fetch(`/api/comments/list/${postId}`, {headers:{'authorization':token}})
         let res = await result.json()
         let container = document.getElementById('container-comentario')
         res.forEach(async el => {
@@ -76,6 +81,7 @@ btn.addEventListener('click', async ()=>{
          method: 'post', 
              headers: {
                  'Content-Type':'application/json',
+                 'authorization': token
              
              },
              body:JSON.stringify(obj)
@@ -88,7 +94,7 @@ btn.addEventListener('click', async ()=>{
 })
 async function getuserNameById(id){
     
-    let names = await fetch('/api/user/names/')
+    let names = await fetch('/api/user/names/', {headers:{'authorization':token}})
     let res = await names.json()
     let nome
     res.forEach(el => {

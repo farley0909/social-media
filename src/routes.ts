@@ -10,7 +10,18 @@ import { loginUserControler } from "./userCases/User/LoginUser";
 import { ResponseImplementation } from "./util/ResponseImplementation";
 
 let router = Router()
-
+const verificaToken = (req, res, next)=>{
+    try{
+        let token = req.headers['authorization']
+        if(token === undefined){
+            return res.json(new ResponseImplementation('unauthorized', true))
+        }else{
+            next()
+        }
+    }catch(err){
+        return res.json(new ResponseImplementation('unauthorized', true))
+    }
+}
 router.get("/", async (req, res)=>{
   
     res.render("index")
@@ -55,13 +66,8 @@ router.get("/api/user/home/", async (req, res)=>{
     }
     
 })
-router.post('/api/post/create/v2/', async (req, res)=>{
-    if(req.headers.authorization.length <= 0){
-        return res.json(new ResponseImplementation('unauthorized', true))
-    }
+router.post('/api/post/create/v2/',verificaToken, async (req, res)=>{
     try {
-        console.log('autor: ', req.body.autor)
-        console.log('Post id: ', req.body.foto)
         let result = await prisma.comentario.create({data:{
             data: new Date().toString(),
             autor: parseInt(req.body.autor),
@@ -73,8 +79,7 @@ router.post('/api/post/create/v2/', async (req, res)=>{
         res.json(new ResponseImplementation(error.message, false))
     }
 })
-router.get('/api/comments/list/:id', async (req, res)=>{
-    console.log('id: ', req.params.id)
+router.get('/api/comments/list/:id', verificaToken, async (req, res)=>{
     try {
         let result = await prisma.comentario.findMany({
             where:{
@@ -86,7 +91,7 @@ router.get('/api/comments/list/:id', async (req, res)=>{
         res.json(error.message)
     }
 })
-router.get('/api/user/names/',async (req, res)=>{
+router.get('/api/user/names/', verificaToken, async (req, res)=>{
   try {
     let result =  await prisma.user.findMany({ select: {
         name:true,
@@ -108,5 +113,7 @@ router.get('/api/user/profile/:id', async (req, res)=>{
     }
  
 })
+
+
 
 export { router }

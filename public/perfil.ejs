@@ -78,11 +78,8 @@
                 <button id="btnForum" data-bs-toggle="modal" data-bs-target="#modalForum"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
                   forum
                 </span></button>
-                <button id="btnEdit"data-bs-toggle="modal" data-bs-target="#modalEdit"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
-                  thumb_up
-                  </span></button>
-                <button class="btn btn-light" type="button" ><span class="material-symbols-outlined">
-                  thumb_down
+                <button id="btnEdit" onclick="deletaPost('<%=post.id%>')" data-bs-toggle="modal" data-bs-target="#modalEdit"  class="btn btn-light me-md-2" type="button"><span class="material-symbols-outlined">
+                  delete
                   </span></button>
               </div>
             </div>
@@ -135,5 +132,6 @@
                 </div>
                 <%})%>
     </div>
+    <script src="./scripts/perfil.js"></script>
 </body>
 </html>

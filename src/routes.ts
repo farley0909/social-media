@@ -8,6 +8,7 @@ import { deleteUserController } from "./userCases/User/deleteUser";
 import { listUsersController } from "./userCases/User/ListUsers";
 import { loginUserControler } from "./userCases/User/LoginUser";
 import { ResponseImplementation } from "./util/ResponseImplementation";
+import jwt from 'jsonwebtoken'
 
 let router = Router()
 const verificaToken = (req, res, next)=>{
@@ -101,6 +102,26 @@ router.get('/api/user/names/', verificaToken, async (req, res)=>{
   } catch (error) {
     res.json({error: error.message})
   } 
+})
+router.post('/api/post/delete/', verificaToken, async (req, res)=>{
+    let {id} = req.body
+    let token = req.headers['authorization']
+    try {
+        let decode = await jwt.decode(token, process.env.JWT_SECRET)
+        let postInfo = await prisma.foto.findUnique({where:{id:parseInt(id)}})
+        let autorInfo = await prisma.user.findUnique({where:{email:decode.email}})
+        
+        if(postInfo.autor == autorInfo.id){
+            let comments = await prisma.comentario.deleteMany({where:{foto:parseInt(id)}})
+            let result = await prisma.foto.delete({where:{id:parseInt(id)}})
+            return res.json( new ResponseImplementation(result, false))
+        }else{
+            return res.json( new ResponseImplementation('Você não é dono da postagem', true))
+        }    
+    } catch (error) {
+        console.log(error)
+        return res.json( new ResponseImplementation(error.message, true))
+    }
 })
 router.get('/api/user/profile/:id', async (req, res)=>{
     try {

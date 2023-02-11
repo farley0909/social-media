@@ -1,20 +1,24 @@
-import { prisma } from "../../database";
+import { mockPrisma } from "./mockPrisma";
 import { AdduserDTO } from "../../userCases/User/AddUser/AddUserDTO";
 import { ResponseImplementation } from "../../util/ResponseImplementation";
 import { IUserRepository } from "../interface/IUserRepository";
 import bcrypt from 'bcrypt'
 import { LoginUserDTO } from "../../userCases/User/LoginUser/LoginUserDTO";
 import jwt from 'jsonwebtoken'
-export class UserRepository implements IUserRepository {
+export class UserRespositoryMock implements IUserRepository {
+    prisma:mockPrisma
+    constructor(){
+        this.prisma = new mockPrisma()
+    }
     async save(data: AdduserDTO){
-        try {     
-            if(data.email.length <= 0) throw new Error('Invalid email')      
+        try {
+            if(data.email.length <= 0) throw new Error('Invalid email')       
             let encryptedPassword = await bcrypt.hash(data.password, 12)
-            let userSaved = await prisma.user.create({data:{
+            let userSaved = await this.prisma.user.create({
                 name: data.name,
                 password: encryptedPassword,
                 email: data.email
-            }})
+            })
             return await new ResponseImplementation(userSaved, false)
 
         } catch (error) {
@@ -24,7 +28,7 @@ export class UserRepository implements IUserRepository {
     async list(token){
         try {
             let decode = await jwt.decode(token, process.env.JWT_SECRET)
-            let userInfo = await prisma.user.findUnique({where:{email:decode.email}})
+            let userInfo = await this.prisma.user.findUnique({where:{email:decode.email}})
 
             return new ResponseImplementation(userInfo, false)
         } catch (error) {
@@ -34,11 +38,12 @@ export class UserRepository implements IUserRepository {
     }
     async delete(id){
         try {
-            let exist = await prisma.user.findUnique({where:{id:id}})
-            if(!exist){
+            let exist = await this.prisma.user.findUnique({id:id})
+            console.log(exist)
+            if(exist.length <= 0){
                 throw new Error('invalid id')
             }
-            let result = await prisma.user.delete({where:{id:parseInt(id)}})
+            let result = await this.prisma.user.delete({id:id})
             let response = new ResponseImplementation(result, false)
             return response
         } catch (error) {
@@ -47,18 +52,19 @@ export class UserRepository implements IUserRepository {
     }
     async login(data:LoginUserDTO){
         try {
-            let searchForThisUSer = await prisma.user.findUnique({where:{email:data.email}})
-            if(searchForThisUSer){
-                let senhaValida = await bcrypt.compare(data.password, searchForThisUSer.password)
-                if(senhaValida && data.email == searchForThisUSer.email){
-                    let token = jwt.sign(data, process.env.JWT_SECRET);
-                    return new ResponseImplementation(token, false)
-                }else{
-                    return new ResponseImplementation('Senha ou email inválido', true)
-                }
-            }else{
-                return new ResponseImplementation('Esse usuário não está cadastrado no sistema', true)
-            }
+            let searchForThisUSer = await this.prisma.user.findUnique({where:{email:data.email}})
+            // if(searchForThisUSer){
+            //     let senhaValida = await bcrypt.compare(data.password, searchForThisUSer.password)
+            //     if(senhaValida && data.email == searchForThisUSer.email){
+            //         let token = jwt.sign(data, process.env.JWT_SECRET);
+            //         return new ResponseImplementation(token, false)
+            //     }else{
+            //         return new ResponseImplementation('Senha ou email inválido', true)
+            //     }
+            // }else{
+            //     return new ResponseImplementation('Esse usuário não está cadastrado no sistema', true)
+            // }
+            return new ResponseImplementation('aa', false)
         } catch (error) {
             return new ResponseImplementation(error.message, true)
         }

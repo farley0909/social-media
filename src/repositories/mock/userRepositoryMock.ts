@@ -5,6 +5,11 @@ import { IUserRepository } from "../interface/IUserRepository";
 import bcrypt from 'bcrypt'
 import { LoginUserDTO } from "../../userCases/User/LoginUser/LoginUserDTO";
 import jwt from 'jsonwebtoken'
+
+
+
+
+
 export class UserRespositoryMock implements IUserRepository {
     prisma:mockPrisma
     constructor(){
@@ -27,20 +32,19 @@ export class UserRespositoryMock implements IUserRepository {
     }
     async list(token){
         try {
-            let decode = await jwt.decode(token, process.env.JWT_SECRET)
-            let userInfo = await this.prisma.user.findUnique({where:{email:decode.email}})
+            let decode = await jwt.decode(token, "projetopw1")
+            let userInfo = await this.prisma.user.findUnique({email:decode.email})
 
             return new ResponseImplementation(userInfo, false)
         } catch (error) {
-            return new ResponseImplementation(error.message, false)
+            return new ResponseImplementation(error.message, true)
         }
        
     }
     async delete(id){
         try {
             let exist = await this.prisma.user.findUnique({id:id})
-            console.log(exist)
-            if(exist.length <= 0){
+            if(!exist){
                 throw new Error('invalid id')
             }
             let result = await this.prisma.user.delete({id:id})
@@ -52,19 +56,20 @@ export class UserRespositoryMock implements IUserRepository {
     }
     async login(data:LoginUserDTO){
         try {
-            let searchForThisUSer = await this.prisma.user.findUnique({where:{email:data.email}})
-            // if(searchForThisUSer){
-            //     let senhaValida = await bcrypt.compare(data.password, searchForThisUSer.password)
-            //     if(senhaValida && data.email == searchForThisUSer.email){
-            //         let token = jwt.sign(data, process.env.JWT_SECRET);
-            //         return new ResponseImplementation(token, false)
-            //     }else{
-            //         return new ResponseImplementation('Senha ou email inválido', true)
-            //     }
-            // }else{
-            //     return new ResponseImplementation('Esse usuário não está cadastrado no sistema', true)
-            // }
-            return new ResponseImplementation('aa', false)
+            let searchForThisUSer = await this.prisma.user.findUnique({email:data.email})
+            console.log(searchForThisUSer)
+            if(searchForThisUSer){
+                let senhaValida = await bcrypt.compare(data.password, searchForThisUSer.password)
+                if(senhaValida && data.email == searchForThisUSer.email){
+                    
+                    let token = jwt.sign(data, "projetopw1");
+                    return new ResponseImplementation(token, false)
+                }else{
+                    return new ResponseImplementation('Senha ou email inválido', true)
+                }
+            }else{
+                return new ResponseImplementation('Esse usuário não está cadastrado no sistema', true)
+            }
         } catch (error) {
             return new ResponseImplementation(error.message, true)
         }

@@ -1,4 +1,7 @@
 import express from 'express'
+import * as dotenv from 'dotenv'
+dotenv.config()
+
 import { router } from './routes'
 import * as path from 'path';
 import morgan from  'morgan'

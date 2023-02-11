@@ -1,4 +1,11 @@
 import {uuid} from 'uuidv4'
+interface user {
+    name:string
+    password:string
+    email:string
+    id:string
+}
+
 export class userMock {
     users = []
     async create(data){
@@ -8,9 +15,6 @@ export class userMock {
                 throw new Error('Email constraint failed')
             }
         })
-
-
-
         this.users.push(data)
         let result
          this.users.forEach(el => {
@@ -23,11 +27,23 @@ export class userMock {
     async findMany(){
         return this.users
     }
-    findUnique(data){
-        let user = []
+    findUnique(data):user{
+        let user 
+        let finded = 0
         this.users.forEach(el => {
-            if(el.id == data.id) user = el
+            if(el.id == data.id) {
+                user = el
+                finded = 1
+            }
         })
+        if(finded == 0){
+            this.users.forEach(el => {
+                if(el.email == data.email) {
+                    user = el
+                    finded = 1
+                }
+            })
+        }
 
         return user
     }

@@ -28,7 +28,7 @@ export class UserRepository implements IUserRepository {
 
             return new ResponseImplementation(userInfo, false)
         } catch (error) {
-            return new ResponseImplementation(error.message, false)
+            return new ResponseImplementation(error.message, true)
         }
        
     }

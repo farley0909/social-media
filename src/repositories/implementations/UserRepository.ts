@@ -9,7 +9,7 @@ import { uuid } from "uuidv4";
 export class UserRepository implements IUserRepository {
     async save(data: AdduserDTO){
         try {     
-            if(data.email.length <= 0) throw new Error('Invalid email')      
+            if(data.email.length <= 4) throw new Error('Invalid email')      
             let encryptedPassword = await bcrypt.hash(data.password, 12)
             let userSaved = await prisma.user.create({data:{
                 id: await uuid(),

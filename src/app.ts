@@ -28,7 +28,7 @@ app.use(router)
 app.post("/api/user/upload/profile-picture/", upload.single('file') ,async (req:any, res)=>{
     try {
       let user = await prisma.user.update({ where:{
-            id:parseInt(req.body.id)
+            id:req.body.id
         }, data:{
             foto_perfil:req.file.filename
         }}) 

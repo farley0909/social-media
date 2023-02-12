@@ -5,12 +5,14 @@ import { IUserRepository } from "../interface/IUserRepository";
 import bcrypt from 'bcrypt'
 import { LoginUserDTO } from "../../userCases/User/LoginUser/LoginUserDTO";
 import jwt from 'jsonwebtoken'
+import { uuid } from "uuidv4";
 export class UserRepository implements IUserRepository {
     async save(data: AdduserDTO){
         try {     
             if(data.email.length <= 0) throw new Error('Invalid email')      
             let encryptedPassword = await bcrypt.hash(data.password, 12)
             let userSaved = await prisma.user.create({data:{
+                id: await uuid(),
                 name: data.name,
                 password: encryptedPassword,
                 email: data.email
@@ -38,7 +40,7 @@ export class UserRepository implements IUserRepository {
             if(!exist){
                 throw new Error('invalid id')
             }
-            let result = await prisma.user.delete({where:{id:parseInt(id)}})
+            let result = await prisma.user.delete({where:{id:id}})
             let response = new ResponseImplementation(result, false)
             return response
         } catch (error) {
@@ -48,10 +50,12 @@ export class UserRepository implements IUserRepository {
     async login(data:LoginUserDTO){
         try {
             let searchForThisUSer = await prisma.user.findUnique({where:{email:data.email}})
+            console.log(searchForThisUSer)
             if(searchForThisUSer){
                 let senhaValida = await bcrypt.compare(data.password, searchForThisUSer.password)
                 if(senhaValida && data.email == searchForThisUSer.email){
-                    let token = jwt.sign(data, process.env.JWT_SECRET);
+                    
+                    let token = jwt.sign(data, "projetopw1");
                     return new ResponseImplementation(token, false)
                 }else{
                     return new ResponseImplementation('Senha ou email inválido', true)

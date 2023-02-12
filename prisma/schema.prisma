@@ -8,34 +8,28 @@ datasource db {
 }
 
 model User {
-  id                     Int          @id @default(autoincrement())
-  email                  String       @unique
+  email                  String  @unique
   name                   String
   password               String
   foto_perfil            String?
-  comentarios_publicados Int?
-  fotos_publicadas       Int?
-  comentario_relacao     Comentario[]
-  fots                   Foto[]
+  comentarios_publicados String?
+  fotos_publicadas       String?
+  id                     String  @unique @db.Uuid
 }
 
 model Foto {
-  id               Int          @id @default(autoincrement())
-  imagem           String
-  data             String
-  descricao        String
-  comentarios      Int?
-  autor            Int
-  comentarios_foto Comentario[]
-  autor_relacai    User         @relation(fields: [autor], references: [id])
+  imagem      String
+  data        String
+  descricao   String
+  comentarios String?
+  autor       String
+  id          String  @unique @db.Uuid
 }
 
 model Comentario {
-  id               Int    @id @default(autoincrement())
-  data             String
-  autor            Int
-  comentario       String
-  foto             Int
-  autor_comentario User   @relation(fields: [autor], references: [id])
-  foto_comentario  Foto   @relation(fields: [foto], references: [id])
+  data       String
+  autor      String
+  comentario String
+  foto       String
+  id         String @unique @db.Uuid
 }

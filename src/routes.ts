@@ -9,6 +9,7 @@ import { listUsersController } from "./userCases/User/ListUsers";
 import { loginUserControler } from "./userCases/User/LoginUser";
 import { ResponseImplementation } from "./util/ResponseImplementation";
 import jwt from 'jsonwebtoken'
+import { uuid } from "uuidv4";
 
 let router = Router()
 const verificaToken = (req, res, next)=>{
@@ -36,7 +37,7 @@ router.get("/api/user/list/:token", async (req, res)=>{
 router.get("/api/user/basic-info/:id", async (req, res)=>{
     try {
 
-        let result =  await prisma.user.findUnique({where:{id: parseInt(req.params.id)}})
+        let result =  await prisma.user.findUnique({where:{id: req.params.id}})
 
         let contentToSend = {
             nome:result.name,
@@ -70,9 +71,10 @@ router.get("/api/user/home/", async (req, res)=>{
 router.post('/api/post/create/v2/',verificaToken, async (req, res)=>{
     try {
         let result = await prisma.comentario.create({data:{
+            id: await uuid(),
             data: new Date().toString(),
-            autor: parseInt(req.body.autor),
-            foto: parseInt(req.body.foto),
+            autor: req.body.autor,
+            foto:req.body.foto,
             comentario: req.body.comentario
         }})
         res.json(new ResponseImplementation(result, false))
@@ -84,7 +86,7 @@ router.get('/api/comments/list/:id', verificaToken, async (req, res)=>{
     try {
         let result = await prisma.comentario.findMany({
             where:{
-               foto:parseInt(req.params.id)
+               foto:req.params.id
             }
         })
         res.json(result)
@@ -108,12 +110,12 @@ router.post('/api/post/delete/', verificaToken, async (req, res)=>{
     let token = req.headers['authorization']
     try {
         let decode = await jwt.decode(token, process.env.JWT_SECRET)
-        let postInfo = await prisma.foto.findUnique({where:{id:parseInt(id)}})
+        let postInfo = await prisma.foto.findUnique({where:{id:id}})
         let autorInfo = await prisma.user.findUnique({where:{email:decode.email}})
         
         if(postInfo.autor == autorInfo.id){
-            let comments = await prisma.comentario.deleteMany({where:{foto:parseInt(id)}})
-            let result = await prisma.foto.delete({where:{id:parseInt(id)}})
+            let comments = await prisma.comentario.deleteMany({where:{foto:id}})
+            let result = await prisma.foto.delete({where:{id:id}})
             return res.json( new ResponseImplementation(result, false))
         }else{
             return res.json( new ResponseImplementation('Você não é dono da postagem', true))
@@ -125,9 +127,9 @@ router.post('/api/post/delete/', verificaToken, async (req, res)=>{
 })
 router.get('/api/user/profile/:id', async (req, res)=>{
     try {
-        let posts = await prisma.foto.findMany({where:{autor: parseInt(req.params.id)}})
-        let autor = await prisma.user.findUnique({where:{id:parseInt(req.params.id)}}) 
-        let comentarios = await prisma.comentario.findMany({where:{autor: parseInt(req.params.id)}})
+        let posts = await prisma.foto.findMany({where:{autor:req.params.id}})
+        let autor = await prisma.user.findUnique({where:{id:req.params.id}}) 
+        let comentarios = await prisma.comentario.findMany({where:{autor: req.params.id}})
         res.render('perfil', {posts:posts, autor: autor, comentarios: comentarios})
     } catch (error) {
        
